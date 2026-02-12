@@ -29,8 +29,8 @@ public class RoadTest {
 
     // -------- Test 2 --------
     public static void testWeightedDistance() {
-        Location source = new Location("L001", "A", "Type", 0, 0);
-        Location dest = new Location("L002", "B", "Type", 0, 0);
+        Location source = new Location("L001", "StationA", "Type", 0, 0);
+        Location dest = new Location("L002", "StationB", "Type", 0, 0);
 
         Road road = new Road("R001", source, dest, 100, "Highway", 3);
 
@@ -40,8 +40,8 @@ public class RoadTest {
 
     // -------- Test 3 --------
     public static void testDifferentTrafficLevels() {
-        Location source = new Location("L001", "A", "Type", 0, 0);
-        Location dest = new Location("L002", "B", "Type", 0, 0);
+        Location source = new Location("L001", "Alpha", "Type", 0, 0);
+        Location dest = new Location("L002", "Beta", "Type", 0, 0);
 
         Road lowTraffic = new Road("R001", source, dest, 200, "Street", 1);
         Road highTraffic = new Road("R002", source, dest, 200, "Street", 5);
