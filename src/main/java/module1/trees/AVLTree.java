@@ -127,23 +127,175 @@ public class AVLTree implements LocationTree {
             insert(location);
         }
     }
-    
 
+    @Override
+    public Location search(String locationId) {
+        if (locationId == null || locationId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Location ID cannot be null or empty");
+        }
+        
+        AVLNode result = search(root, locationId);
+        return (result != null) ? result.location : null;
+    }
+    
+    private AVLNode search(AVLNode node, String locationId) {
+        if (node == null) {
+            return null;
+        }
+        
+        int comparison = locationId.compareTo(node.location.getId());
+    
+        if (comparison < 0) {
+            return search(node.left, locationId);
+        } else if (comparison > 0) {
+            return search(node.right, locationId);
+        } else {
+            return node; // Found
+        }
+    }
 
     @Override
     public void delete(String locationId) {
-        throw new UnsupportedOperationException("Delete not implemented yet");
+        if (locationId == null || locationId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Location ID cannot be null or empty");
+        }
+        
+        Location location = search(locationId);
+        if (location == null) {
+            System.out.println("Location not found: " + locationId);
+            return;
+        }
+        
+        root = delete(root, locationId);
+        size--;
+        System.out.println("Deleted location: " + location.getName() + " (Tree height: " + getHeight() + ")");
     }
     
-    @Override
-    public Location search(String locationId) {
-        throw new UnsupportedOperationException("Search not implemented yet");
+    private AVLNode delete(AVLNode node, String locationId) {
+        if (node == null) {
+            return null;
+        }
+        
+        int comparison = locationId.compareTo(node.location.getId());
+        
+        if (comparison < 0) {
+            node.left = delete(node.left, locationId);
+        } else if (comparison > 0) {
+            node.right = delete(node.right, locationId);
+        } else {
+            // Node to delete found
+        
+            // Case 1: Node with only one child or no child
+            if (node.left == null || node.right == null) {
+                AVLNode temp = (node.left != null) ? node.left : node.right;
+            
+                // No child case
+                if (temp == null) {
+                    node = null;
+                }
+                // One child case
+                else {
+                    node = temp; // Copy the child
+                }
+            }
+            
+            // Case 2: Node with two children
+            else {
+                // Get inorder successor (smallest in right subtree)
+                AVLNode successor = getMinNode(node.right);
+            
+                // Copy successor's data to this node
+                node.location = successor.location;
+            
+                // Delete the inorder successor
+                node.right = delete(node.right, successor.location.getId());
+            }
+        }
+        
+        // If tree had only one node, return
+        if (node == null) {
+            return null;
+        }
+    
+        // Update height and balance
+        return balance(node);
     }
+
+
+    private AVLNode getMinNode(AVLNode node) {
+        AVLNode current = node;
+        while (current.left != null) {
+            current = current.left;
+        }
+        return current;
+    }
+    
     
     @Override
     public void displayInOrder() {
-        throw new UnsupportedOperationException("Display not implemented yet");
+        if (isEmpty()) {
+            System.out.println("Tree is empty.");
+            return;
+        }
+    
+        System.out.println("\n=== AVL Tree Contents (In-Order) ===");
+        System.out.println("Total locations: " + size);
+        System.out.println("Tree height: " + getHeight());
+        System.out.println("Balanced: " + isBalanced());
+        System.out.println("-------------------------------");
+    
+        List<Location> locations = new ArrayList<>();
+        inOrderTraversal(root, locations);
+    
+        for (int i = 0; i < locations.size(); i++) {
+            System.out.printf("%2d. %s%n", i + 1, locations.get(i));
+        }
     }
+    
+    
+    private void inOrderTraversal(AVLNode node, List<Location> locations) {
+        if (node != null) {
+            inOrderTraversal(node.left, locations);
+            locations.add(node.location);
+            inOrderTraversal(node.right, locations);
+        }
+    }
+    
+    public boolean isBalanced() {
+        return isBalanced(root);
+    }
+
+    private boolean isBalanced(AVLNode node) {
+        if (node == null) return true;
+    
+        int balance = getBalance(node);
+        return Math.abs(balance) <= 1 && 
+           isBalanced(node.left) && 
+           isBalanced(node.right);
+    }
+    
+    public void displayTree() {
+        System.out.println("\n=== AVL Tree Structure ===");
+        displayTree(root, "", true);
+    }
+    
+    private void displayTree(AVLNode node, String prefix, boolean isTail) {
+        if (node != null) {
+            System.out.println(prefix + (isTail ? "└── " : "├── ") + node.location.getId() + " (" + node.location.getName() + ")");
+        
+            String childPrefix = prefix + (isTail ? "    " : "│   ");
+        
+            if (node.left != null || node.right != null) {
+                if (node.left != null) {
+                    displayTree(node.left, childPrefix, false);
+                }
+                if (node.right != null) {
+                    displayTree(node.right, childPrefix, true);
+                }
+            }
+        }
+    }
+    
     
     private AVLNode rightRotate(AVLNode y) {
         if (y == null || y.left == null) {
