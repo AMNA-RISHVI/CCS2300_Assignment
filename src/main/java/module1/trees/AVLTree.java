@@ -79,9 +79,57 @@ public class AVLTree implements LocationTree {
     // Other methods 
     @Override
     public void insert(Location location) {
-        throw new UnsupportedOperationException("Insert not implemented yet");
+        if (location == null) {
+            throw new IllegalArgumentException("Cannot insert null location");
+        }
+        
+        root = insert(root, location);
+        size++;
+        System.out.println("Inserted location: " + location.getName() + " (Tree height: " + getHeight() + ")");
     }
     
+    
+    private AVLNode insert(AVLNode node, Location location) {
+        // Base case: create new node
+        if (node == null) {
+            return new AVLNode(location);
+        }
+    
+        // Compare location IDs
+        int comparison = location.getId().compareTo(node.location.getId());
+    
+        if (comparison < 0) {
+            // Insert in left subtree
+            node.left = insert(node.left, location);
+        } else if (comparison > 0) {
+            // Insert in right subtree
+            node.right = insert(node.right, location);
+        } else {
+            // Duplicate ID - update the location (or throw exception)
+            System.out.println("Location ID already exists. Updating location data.");
+            node.location = location;
+            size--; // Adjust size since we're replacing, not adding
+            return node;
+        }
+        
+        // Update height of this ancestor node
+        updateHeight(node);
+    
+        // Balance the tree
+        return balance(node);
+    }
+    
+    
+    public void insertAll(Location[] locations) {
+        if (locations == null) return;
+    
+        for (Location location : locations) {
+            insert(location);
+        }
+    }
+    
+
+
     @Override
     public void delete(String locationId) {
         throw new UnsupportedOperationException("Delete not implemented yet");
@@ -164,7 +212,7 @@ public class AVLTree implements LocationTree {
             if (getBalance(node.left) >= 0) {
                 return rightRotate(node);
             }
-            
+
             // Left-Right case
             else {
                 return leftRightRotate(node);
