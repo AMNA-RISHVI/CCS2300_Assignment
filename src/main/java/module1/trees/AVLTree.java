@@ -35,16 +35,39 @@ public class AVLTree implements LocationTree {
     
    
     private int height(AVLNode node) {
-        return (node == null) ? 0 : node.height;
+        if (node == null) {
+            return 0;
+        }
+        return node.height;
     }
     
     
     private void updateHeight(AVLNode node) {
         if (node != null) {
-            node.height = 1 + Math.max(height(node.left), height(node.right));
+            int leftHeight = (node.left != null) ? node.left.height : 0;
+            int rightHeight = (node.right != null) ? node.right.height : 0;
+            node.height = 1 + Math.max(leftHeight, rightHeight);
         }
     }
+
+    private boolean verifyHeight(AVLNode node) {
+        if (node == null) return true;
+
+        int expectedHeight = 1 + Math.max(height(node.left), height(node.right));
+        boolean correct = (node.height == expectedHeight);
+
+        if (!correct) {
+            System.err.println(
+                "Height mismatch at node " + node.location.getId() + ": expected " + expectedHeight + ", got " + node.height );
+        }
     
+        return correct && verifyHeight(node.left) && verifyHeight(node.right);
+    }
+
+    public boolean verifyTree() {
+        return verifyHeight(root);
+    }
+
     
     private int getBalance(AVLNode node) {
         if (node == null) {
