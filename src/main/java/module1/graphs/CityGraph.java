@@ -67,4 +67,96 @@ public class CityGraph {
     public Road getRoad(String roadId) {
         return roadRegistry.get(roadId);
     }
+    
+    
+    public boolean addLocation(Location location) {
+        if (location == null) {
+            throw new IllegalArgumentException("Cannot add null location");
+        }
+        
+        String locationId = location.getId();
+        
+        // Check if location already exists
+        if (hasLocation(locationId)) {
+            System.out.println("Location already exists: " + location.getName());
+            return false;
+        }
+        
+        // Add to adjacency list and registry
+        adjacencyList.put(location, new ArrayList<>());
+        locationRegistry.put(locationId, location);
+        totalLocations++;
+        
+        System.out.println("✅ Added location: " + location.getName() + " (ID: " + locationId + ")");
+        return true;
+    }
+    
+    
+    public int addLocations(Location[] locations) {
+        if (locations == null) return 0;
+        
+        int addedCount = 0;
+        for (Location location : locations) {
+            if (addLocation(location)) {
+                addedCount++;
+            }
+        }
+        return addedCount;
+    }
+    
+    
+    public boolean removeLocation(String locationId) {
+        if (!hasLocation(locationId)) {
+            System.out.println("Location not found: " + locationId);
+            return false;
+        }
+        
+        Location location = getLocation(locationId);
+        
+        // Remove all roads connected to this location
+        List<Road> connectedRoads = new ArrayList<>(adjacencyList.get(location));
+        for (Road road : connectedRoads) {
+            removeRoad(road.getSource().getId(), road.getDestination().getId());
+        }
+        
+        // Remove from adjacency list and registry
+        adjacencyList.remove(location);
+        locationRegistry.remove(locationId);
+        totalLocations--;
+        
+        System.out.println("Removed location: " + location.getName() + " and all connected roads");
+        return true;
+    }
+    
+    
+    public int removeLocations(String[] locationIds) {
+        if (locationIds == null) return 0;
+        
+        int removedCount = 0;
+        for (String locationId : locationIds) {
+            if (removeLocation(locationId)) {
+                removedCount++;
+            }
+        }
+        return removedCount;
+    }
+    
+    public boolean updateLocation(String locationId, Location newLocation) {
+        if (!hasLocation(locationId)) {
+            return false;
+        }
+    
+        Location oldLocation = getLocation(locationId);
+    
+        // Remove old location
+        adjacencyList.remove(oldLocation);
+        locationRegistry.remove(locationId);
+    
+        // Add new location
+        adjacencyList.put(newLocation, new ArrayList<>());
+        locationRegistry.put(locationId, newLocation);
+    
+        System.out.println("Updated location: " + oldLocation.getName() + " → " + newLocation.getName());
+        return true;
+    }
 }
