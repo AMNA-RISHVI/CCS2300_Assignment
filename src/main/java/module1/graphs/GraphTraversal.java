@@ -59,7 +59,7 @@ public class GraphTraversal {
                 i + 1, location.getName(), location.getType());
             
             if (i < path.size() - 1) {
-                System.out.println("    ↓");
+                System.out.println("    |");
             }
         }
         
@@ -73,7 +73,7 @@ public class GraphTraversal {
     public List<Location> bfsTraversal(String startId) {
         validateLocations(startId, null);
         
-        System.out.println("\n🚶 BFS Traversal (Queue-based)");
+        System.out.println("\n BFS Traversal (Queue-based)");
         System.out.println("Starting from: " + cityGraph.getLocation(startId).getName());
         System.out.println("-".repeat(40));
         
@@ -360,27 +360,5 @@ public class GraphTraversal {
         // Backtrack
         visited.remove(currentId);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

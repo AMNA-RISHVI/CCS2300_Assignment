@@ -87,7 +87,7 @@ public class CityGraph {
         locationRegistry.put(locationId, location);
         totalLocations++;
         
-        System.out.println("✅ Added location: " + location.getName() + " (ID: " + locationId + ")");
+        System.out.println("Added location: " + location.getName() + " (ID: " + locationId + ")");
         return true;
     }
     
@@ -156,7 +156,7 @@ public class CityGraph {
         adjacencyList.put(newLocation, new ArrayList<>());
         locationRegistry.put(locationId, newLocation);
     
-        System.out.println("Updated location: " + oldLocation.getName() + " → " + newLocation.getName());
+        System.out.println("Updated location: " + oldLocation.getName() + " -> " + newLocation.getName());
         return true;
     }
     
@@ -208,7 +208,7 @@ public class CityGraph {
     
        totalRoads += 2; // Count both directions
        
-       System.out.println("✅ Added road: " + from.getName() + " ↔ " + to.getName() + " (" + distance + "m, " + roadType + ")");
+       System.out.println("Added road: " + from.getName() + " <-> " + to.getName() + " (" + distance + "m, " + roadType + ")");
        return true;
     }
     
@@ -317,7 +317,7 @@ public class CityGraph {
         // For now, we remove and recreate the road
         // In a real implementation, we would have mutable traffic levels
     
-        System.out.println("⚠️ Traffic update not implemented in this version");
+        System.out.println("Traffic update not implemented in this version");
         return false;
     }
 
