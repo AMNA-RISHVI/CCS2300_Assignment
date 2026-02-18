@@ -69,7 +69,7 @@ public class GraphTraversal {
     }
     
     
-    
+
     public List<Location> bfsTraversal(String startId) {
         validateLocations(startId, null);
         
@@ -122,7 +122,6 @@ public class GraphTraversal {
 
     
     //Finds the shortest path (by number of stops) using BFS.
-    
     public List<Location> findShortestPathBFS(String startId, String endId) {
         validateLocations(startId, endId);
         
@@ -179,6 +178,7 @@ public class GraphTraversal {
         return new ArrayList<>();
     }
     
+
     private int calculatePathDistance(List<Location> path) {
         if (path.size() < 2) return 0;
         
@@ -197,4 +197,190 @@ public class GraphTraversal {
         }
         return totalDistance;
     }
+    
+    
+    public List<Location> dfsTraversal(String startId) {
+        validateLocations(startId, null);
+        
+        System.out.println("\n DFS Traversal (Stack-based)");
+        System.out.println("Starting from: " + cityGraph.getLocation(startId).getName());
+        System.out.println("-".repeat(40));
+        
+        List<Location> visitedOrder = new ArrayList<>();
+        Set<String> visited = new HashSet<>();
+        Stack<Location> stack = new Stack<>();
+    
+        Location start = cityGraph.getLocation(startId);
+        stack.push(start);
+    
+        int step = 1;
+    
+        while (!stack.isEmpty()) {
+            Location current = stack.pop();
+        
+            if (!visited.contains(current.getId())) {
+                visited.add(current.getId());
+                visitedOrder.add(current);
+            
+                System.out.printf("Step %2d: Visiting %s%n", step, current.getName());
+                step++;
+            
+                // Add neighbors to stack in reverse order for more natural exploration
+                List<Road> roads = cityGraph.getConnectedRoads(current.getId());
+                List<Location> neighbors = new ArrayList<>();
+                for (Road road : roads) {
+                    neighbors.add(road.getDestination());
+                }
+                
+                
+                // Add neighbors to stack (reverse to explore in original order)
+                Collections.reverse(neighbors);
+                for (Location neighbor : neighbors) {
+                    if (!visited.contains(neighbor.getId())) {
+                        stack.push(neighbor);
+                    }
+                }
+            }
+        }
+    
+        System.out.println("-".repeat(40));
+        System.out.println("DFS complete. Visited " + visitedOrder.size() + " locations.");
+    
+        return visitedOrder;
+    }
+    
+    
+    public List<Location> findPathDFS(String startId, String endId) {
+        validateLocations(startId, endId);
+    
+        System.out.println("\n Finding path (DFS)");
+        System.out.println("From: " + cityGraph.getLocation(startId).getName());
+        System.out.println("To: " + cityGraph.getLocation(endId).getName());
+    
+        if (startId.equals(endId)) {
+            List<Location> path = new ArrayList<>();
+            path.add(cityGraph.getLocation(startId));
+            System.out.println("Start and end are the same location!");
+            return path;
+        }
+    
+        Set<String> visited = new HashSet<>();
+        List<Location> path = new ArrayList<>();
+    
+        boolean found = dfsPathHelper(startId, endId, visited, path);
+    
+        if (found) {
+            int totalDistance = calculatePathDistance(path);
+            printPath(path, totalDistance);
+        } else {
+            System.out.println("\n No path found between the locations");
+        }
+    
+        return path;
+    }
+    
+    
+    //Recursive helper for DFS path finding
+    private boolean dfsPathHelper(String currentId, String endId, Set<String> visited, List<Location> path) {
+        Location current = cityGraph.getLocation(currentId);
+        visited.add(currentId);
+        path.add(current);
+        
+        // Check if we reached destination
+        if (currentId.equals(endId)) {
+            return true;
+        }
+        
+        // Explore neighbors
+        List<Road> roads = cityGraph.getConnectedRoads(currentId);
+        for (Road road : roads) {
+            Location neighbor = road.getDestination();
+            if (!visited.contains(neighbor.getId())) {
+                boolean found = dfsPathHelper(neighbor.getId(), endId, visited, path);
+                if (found) {
+                    return true;
+                }
+            }
+        }
+        
+        // Backtrack
+        path.remove(path.size() - 1);
+        return false;
+    }
+    
+    public List<List<Location>> findAllPaths(String startId, String endId) {
+        validateLocations(startId, endId);
+        
+        List<List<Location>> allPaths = new ArrayList<>();
+        Set<String> visited = new LinkedHashSet<>();
+    
+        findAllPathsHelper(startId, endId, visited, allPaths);
+    
+        System.out.println("\n Found " + allPaths.size() + " path(s)");
+    
+        // Sort paths by length (shortest first)
+        allPaths.sort((path1, path2) -> Integer.compare(path1.size(), path2.size()));
+    
+        // Display top 3 paths
+        int displayLimit = Math.min(3, allPaths.size());
+        for (int i = 0; i < displayLimit; i++) {
+            System.out.println("\n Path " + (i + 1) + " (" + allPaths.get(i).size() + " stops):");
+            int distance = calculatePathDistance(allPaths.get(i));
+            printPath(allPaths.get(i), distance);
+        }
+    
+        return allPaths;
+    }
+    
+    
+    //Recursive helper to find all paths
+    private void findAllPathsHelper(String currentId, String endId, Set<String> visited, List<List<Location>> allPaths) {
+        Location current = cityGraph.getLocation(currentId);
+        visited.add(currentId);
+    
+        if (currentId.equals(endId)) {
+            // Found a path
+            List<Location> path = new ArrayList<>();
+            for (String id : visited) {
+                path.add(cityGraph.getLocation(id));
+            }
+            allPaths.add(path);
+        } else {
+            // Continue exploring
+            List<Road> roads = cityGraph.getConnectedRoads(currentId);
+            for (Road road : roads) {
+                Location neighbor = road.getDestination();
+            
+                if (!visited.contains(neighbor.getId())) {
+                    findAllPathsHelper(neighbor.getId(), endId, visited, allPaths);
+                }
+            }
+        }
+        
+        // Backtrack
+        visited.remove(currentId);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
