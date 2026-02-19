@@ -77,5 +77,43 @@ public class RoutePlannerMenu {
         System.out.println("=".repeat(60));
     }
 
-    // Other methods will be added
+
+    public void displayMainMenu() {
+        while (true) {
+            clearConsole();
+            printHeader("MAIN MENU");
+            System.out.println("1. Location Management");
+            System.out.println("2. Road Management");
+            System.out.println("3. Graph Operations");
+            System.out.println("4. Tree Operations");
+            System.out.println("5. System Statistics");
+            System.out.println("6. Demo Data");
+            System.out.println("7. Exit to Module Selection");
+            System.out.print("\nChoice: ");
+
+            String choice = scanner.nextLine().trim();
+            switch (choice) {
+                case "1": locationManagementMenu(); break;
+                case "2": roadManagementMenu(); break;
+                case "3": graphOperationsMenu(); break;
+                case "4": treeOperationsMenu(); break;
+                case "5": systemStatisticsMenu(); break;
+                case "6": demoDataMenu(); break;
+                case "7": return;
+                default: System.out.println("Invalid choice."); pause();
+            }
+        }
+    }
+    
+    private void clearConsole() {
+        try {
+            if (System.getProperty("os.name").contains("Windows"))
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            else
+                System.out.print("\033[H\033[2J");
+        } catch (Exception e) {
+            System.out.println("\n".repeat(50));
+        }
+    }
 }
+
