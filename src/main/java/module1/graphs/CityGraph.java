@@ -320,7 +320,250 @@ public class CityGraph {
         System.out.println("Traffic update not implemented in this version");
         return false;
     }
+    
+    
+    public void displayGraph() {
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("SMART CITY GRAPH OVERVIEW");
+        System.out.println("=".repeat(60));
+    
+        // Graph statistics
+        System.out.printf("Statistics:%n");
+        System.out.printf("Locations: %d%n", totalLocations);
+        System.out.printf("Roads: %d%n", totalRoads);
+        System.out.printf("Density: %.2f roads per location%n", totalLocations > 0 ? (double) totalRoads / totalLocations : 0);
+    
+        System.out.println("\n Locations:");
+        System.out.println("-".repeat(60));
+    
+        if (totalLocations == 0) {
+            System.out.println("No locations added yet.");
+            System.out.println("=".repeat(60));
+            return;
+        }
+    
+        // Display all locations
+        List<Location> locations = getAllLocations();
+        locations.sort((a, b) -> a.getId().compareTo(b.getId()));
+    
+        for (int i = 0; i < locations.size(); i++) {
+            Location loc = locations.get(i);
+            System.out.printf("%2d. %-6s | %-20s | %-12s | (%3.0f, %3.0f)%n",
+                i + 1, loc.getId(), loc.getName(), loc.getType(), 
+                loc.getX(), loc.getY());
+        }
+    
+        System.out.println("\n Road Network:");
+        System.out.println("-".repeat(60));
+    
+        if (totalRoads == 0) {
+           System.out.println("No roads added yet.");
+           System.out.println("=".repeat(60));
+           return;
+        }
+    
+        // Display all roads (only one direction to avoid duplication)
+        int roadNumber = 1;
+        Set<String> displayedRoads = new HashSet<>();
+    
+        for (Location from : locations) {
+            List<Road> roads = adjacencyList.get(from);
+          
+            if (!roads.isEmpty()) {
+                System.out.printf("From %s (%s):%n", from.getName(), from.getId());
+            
+                for (Road road : roads) {
+                    // Only display forward roads (ending with "_F")
+                    if (road.getId().endsWith("_F")) {
+                        String roadKey = from.getId() + "-" + road.getDestination().getId();
+                    
+                        if (!displayedRoads.contains(roadKey)) {
+                            String trafficSymbol = getTrafficSymbol(road.getTrafficLevel());
+                            System.out.printf("%2d. -> %-20s %5d m  [%-8s] %s Traffic: %d/5%n",
+                                roadNumber++,
+                                road.getDestination().getName(),
+                                road.getDistance(),
+                                road.getRoadType(),
+                                trafficSymbol,
+                                road.getTrafficLevel());
+                        
+                            displayedRoads.add(roadKey);
+                        }
+                    }
+                }
+                System.out.println();
+            }
+        }
+    
+        // Connectivity analysis
+        System.out.println("Connectivity Analysis:");
+        System.out.println("-".repeat(60));
+    
+        if (totalLocations > 0) {
+            Location sampleLocation = locations.get(0);
+            int reachableCount = countReachableLocations(sampleLocation.getId());
+        
+            System.out.printf("From %s, you can reach %d of %d locations%n",
+                sampleLocation.getName(), reachableCount, totalLocations);
+        
+            if (reachableCount == totalLocations) {
+                System.out.println("Graph is fully connected!");
+            } else if (reachableCount > 1) {
+                System.out.printf("Graph has %d disconnected components%n",
+                    totalLocations - reachableCount + 1);
+            } else {
+                System.out.println("Graph is disconnected (isolated locations)");
+            }
+        }
+    
+        System.out.println("=".repeat(60));
+    }
+    
+    
+    public void displayLocationDetails(String locationId) {
+        if (!hasLocation(locationId)) {
+            System.out.println("Location not found: " + locationId);
+            return;
+        }
+    
+        Location location = getLocation(locationId);
+        List<Road> roads = getConnectedRoads(locationId);
+    
+        System.out.println("\n" + "=".repeat(50));
+        System.out.println("LOCATION DETAILS");
+        System.out.println("=".repeat(50));
+    
+        System.out.printf("ID: %s%n", location.getId());
+        System.out.printf("Name: %s%n", location.getName());
+        System.out.printf("Type: %s%n", location.getType());
+        System.out.printf("Coordinates: (%.1f, %.1f)%n", location.getX(), location.getY());
+    
+        System.out.println("\nConnections:");
+        System.out.println("-".repeat(50));
+    
+        if (roads.isEmpty()) {
+            System.out.println("No roads connected to this location");
+        } else {
+            // Separate incoming and outgoing roads
+            List<Road> outgoing = new ArrayList<>();
+            List<Road> incoming = new ArrayList<>();
+        
+            for (Road road : roads) {
+                if (road.getSource().getId().equals(locationId)) {
+                    outgoing.add(road);
+                } else {
+                    incoming.add(road);
+                }
+            }
+        
+            // Display outgoing roads
+            if (!outgoing.isEmpty()) {
+                System.out.println("  Roads FROM here:");
+                for (Road road : outgoing) {
+                    String trafficSymbol = getTrafficSymbol(road.getTrafficLevel());
+                    System.out.printf("   -> %-15s %5d m  [%-8s] %s%n",
+                        road.getDestination().getName(),
+                        road.getDistance(),
+                        road.getRoadType(),
+                        trafficSymbol);
+                }
+            }
+        
+            // Display incoming roads
+            if (!incoming.isEmpty()) {
+                System.out.println("\n  Roads TO here:");
+                for (Road road : incoming) {
+                    String trafficSymbol = getTrafficSymbol(road.getTrafficLevel());
+                    System.out.printf("   <- %-15s %5d m  [%-8s] %s%n",
+                        road.getSource().getName(),
+                        road.getDistance(),
+                        road.getRoadType(),
+                        trafficSymbol);
+                }
+            }
+        
+            System.out.printf("%n  Total connections: %d%n", roads.size());
+        }
+    
+        System.out.println("=".repeat(50));
+    }
 
+
+    private String getTrafficSymbol(int trafficLevel) {
+        switch (trafficLevel) {
+            case 1: return "green - light";
+            case 2: return "yellow - moderate";
+            case 3: return "orange - heavy";
+            case 4: return "red - very heavy";
+            case 5: return "stop - gridlock";
+            default: return "Invalide";
+        }
+    }
+
+
+    private int countReachableLocations(String startId) {
+        if (!hasLocation(startId)) return 0;
+    
+        Set<String> visited = new HashSet<>();
+        Queue<String> queue = new LinkedList<>();
+    
+        queue.add(startId);
+        visited.add(startId);
+    
+        while (!queue.isEmpty()) {
+            String currentId = queue.poll();
+            List<Road> roads = getConnectedRoads(currentId);
+        
+            for (Road road : roads) {
+                String neighborId = road.getDestination().getId();
+                if (!visited.contains(neighborId)) {
+                    visited.add(neighborId);
+                    queue.add(neighborId);
+                }
+            }
+        }
+    
+        return visited.size();
+    }
+
+
+    public String generateReport() {
+        StringBuilder report = new StringBuilder();
+    
+        report.append("CITY GRAPH REPORT\n");
+        report.append("=================\n\n");
+    
+        report.append("Summary:\n");
+        report.append(String.format("Total locations: %d%n", totalLocations));
+        report.append(String.format("Total roads: %d%n", totalRoads));
+        report.append(String.format("Road density: %.2f%n", 
+            totalLocations > 0 ? (double) totalRoads / totalLocations : 0));
+    
+        report.append("\nLocation Types:\n");
+        Map<String, Integer> typeCount = new HashMap<>();
+        for (Location loc : getAllLocations()) {
+            typeCount.put(loc.getType(), typeCount.getOrDefault(loc.getType(), 0) + 1);
+        }
+    
+        for (Map.Entry<String, Integer> entry : typeCount.entrySet()) {
+            report.append(String.format("%-15s: %d%n", entry.getKey(), entry.getValue()));
+        }
+    
+        report.append("\nRoad Types:\n");
+        Map<String, Integer> roadTypeCount = new HashMap<>();
+        for (Road road : getAllRoads()) {
+            // Only count forward roads
+            if (road.getId().endsWith("_F")) {
+                roadTypeCount.put(road.getRoadType(), 
+                roadTypeCount.getOrDefault(road.getRoadType(), 0) + 1);
+            }
+        }
+    
+        for (Map.Entry<String, Integer> entry : roadTypeCount.entrySet()) {
+            report.append(String.format("%-15s: %d%n", entry.getKey(), entry.getValue()));
+        }
+        return report.toString();
+    }
 }
 
 
