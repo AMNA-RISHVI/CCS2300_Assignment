@@ -57,6 +57,25 @@ public class InputValidator {
         }
         return defaultValue;
     }
+
+
+    //Validates that an integer is within a given range.
+    public void validateIntRange(int value, int min, int max, String fieldName) {
+        if (value < min || value > max) {
+            throw new IllegalArgumentException(
+                String.format("%s must be between %d and %d (got %d)", fieldName, min, max, value)
+            );
+        }
+    }
+
+
+    public void validateDoubleRange(double value, double min, double max, String fieldName) {
+        if (value < min || value > max) {
+            throw new IllegalArgumentException(
+                String.format("%s must be between %.2f and %.2f (got %.2f)", fieldName, min, max, value)
+            );
+        }
+    }
 }
     
     
