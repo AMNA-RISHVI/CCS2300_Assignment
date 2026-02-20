@@ -142,21 +142,14 @@ public class CityGraph {
     }
     
     public boolean updateLocation(String locationId, Location newLocation) {
-        if (!hasLocation(locationId)) {
-            return false;
-        }
+        Location old = getLocation(locationId);
+        if (old == null) return false;
     
-        Location oldLocation = getLocation(locationId);
+        old.setName(newLocation.getName());
+        old.setType(newLocation.getType());
+        old.setCoordinates(newLocation.getX(), newLocation.getY());
     
-        // Remove old location
-        adjacencyList.remove(oldLocation);
-        locationRegistry.remove(locationId);
-    
-        // Add new location
-        adjacencyList.put(newLocation, new ArrayList<>());
-        locationRegistry.put(locationId, newLocation);
-    
-        System.out.println("Updated location: " + oldLocation.getName() + " -> " + newLocation.getName());
+        System.out.println("Updated location: " + old.getName());
         return true;
     }
     

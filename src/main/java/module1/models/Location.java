@@ -22,6 +22,22 @@ public class Location {
         this.yCoordinate = y;
     }
 
+    public void setName(String name) {
+        validateName(name);
+        this.name = name;
+    }
+
+    public void setType(String type) {
+        validateType(type);
+        this.type = type;
+    }
+
+    public void setCoordinates(double x, double y) {
+        this.xCoordinate = x;
+        this.yCoordinate = y;
+    }
+
+    
     private void validateId(String id) {
         if (id == null || id.trim().isEmpty()) {
             throw new IllegalArgumentException("Location ID cannot be null or empty");
