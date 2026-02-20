@@ -569,7 +569,7 @@ public class RoutePlannerMenu {
             System.out.println("3. Tree Statistics");
             System.out.println("4. Check Balance");
             System.out.println("5. Back");
-            System.out.print("\nChoice: ");
+            System.out.print("\nChoice (1-5): ");
 
             String choice = scanner.nextLine().trim();
             switch (choice) {
@@ -625,5 +625,94 @@ public class RoutePlannerMenu {
         }
         pause();
     }
+
+
+
+
+    private void systemStatisticsMenu() {
+        while (true) {
+            clearConsole();
+            printHeader("SYSTEM STATISTICS");
+            System.out.println("1. Graph Overview");
+            System.out.println("2. Tree Statistics");
+            System.out.println("3. Connectivity Summary");
+            System.out.println("4. Back");
+            System.out.print("\nChoice(1-4): ");
+
+            String choice = scanner.nextLine().trim();
+            switch (choice) {
+                case "1": displayGraphOverview(); break;
+                case "2": displayTreeStats(); break;   // reuse existing method
+                case "3": displayConnectivitySummary(); break;
+                case "4": return;
+                default: System.out.println("Invalid choice."); pause();
+            }
+        }
+    }
+
+    private void displayGraphOverview() {
+        clearConsole();
+        printHeader("GRAPH OVERVIEW");
+        int locCount = cityGraph.getLocationCount();
+        int roadCount = cityGraph.getRoadCount(); // bidirectional count
+
+        System.out.println("Locations: " + locCount);
+        System.out.println("Roads (bidirectional): " + roadCount);
+
+        if (locCount > 0) {
+            double avgDegree = (double) roadCount / locCount;
+            System.out.printf("Average degree: %.2f%n", avgDegree);
+
+            // Count isolated locations (no roads)
+            int isolated = 0;
+            for (Location loc : cityGraph.getAllLocations()) {
+                if (cityGraph.getConnectedRoads(loc.getId()).isEmpty()) {
+                    isolated++;
+                }
+            }
+            System.out.println("Isolated locations: " + isolated);
+
+            // Location type distribution
+            Map<String, Integer> typeCount = new HashMap<>();
+            for (Location loc : cityGraph.getAllLocations()) {
+                typeCount.put(loc.getType(), typeCount.getOrDefault(loc.getType(), 0) + 1);
+            }
+            System.out.println("\nType distribution:");
+            for (Map.Entry<String, Integer> e : typeCount.entrySet()) {
+                System.out.printf("   %-15s: %d%n", e.getKey(), e.getValue());
+            }
+        }
+        pause();
+    }
+
+    private void displayConnectivitySummary() {
+        clearConsole();
+        printHeader("CONNECTIVITY SUMMARY");
+        List<Location> all = cityGraph.getAllLocations();
+        if (all.isEmpty()) {
+            System.out.println("Graph is empty.");
+            pause();
+            return;
+        }
+
+        // BFS from first location to see how many are reachable
+        String startId = all.get(0).getId();
+        List<Location> visited = graphTraversal.bfsTraversal(startId);
+        int reachable = visited.size();
+        int total = all.size();
+
+        System.out.println("Total locations: " + total);
+        System.out.println("Locations reachable from " + startId + ": " + reachable);
+
+        if (reachable == total) {
+            System.out.println("Graph is fully connected.");
+        } else {
+            System.out.println("Graph has " + (total - reachable) + " unreachable locations.");
+            System.out.println("(Try BFS from other starting points to explore components.)");
+        }
+        pause();
+    }
+
+
 }
 
