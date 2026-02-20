@@ -335,7 +335,6 @@ public class GraphTraversal {
     
     //Recursive helper to find all paths
     private void findAllPathsHelper(String currentId, String endId, Set<String> visited, List<List<Location>> allPaths) {
-        Location current = cityGraph.getLocation(currentId);
         visited.add(currentId);
     
         if (currentId.equals(endId)) {
@@ -359,6 +358,6 @@ public class GraphTraversal {
         
         // Backtrack
         visited.remove(currentId);
-}
+    }
 
 }
