@@ -445,5 +445,121 @@ public class RoutePlannerMenu {
         cityGraph.displayLocationDetails(id);
         pause();
     }
+
+
+
+    private void graphOperationsMenu() {
+        while (true) {
+            clearConsole();
+            printHeader("GRAPH OPERATIONS");
+            System.out.println("1. BFS Traversal");
+            System.out.println("2. DFS Traversal");
+            System.out.println("3. Display Graph");
+            System.out.println("4. Check Connectivity");
+            System.out.println("5. Generate Random Graph");
+            System.out.println("6. Back");
+            System.out.print("\nChoice (1-6): ");
+
+            String choice = scanner.nextLine().trim();
+            switch (choice) {
+                case "1": bfsTraversal(); break;
+                case "2": dfsTraversal(); break;
+                case "3": cityGraph.displayGraph(); pause(); break;
+                case "4": checkConnectivity(); break;
+                case "5": generateRandomGraph(); break;
+                case "6": return;
+                default: System.out.println("Invalid."); pause();
+            }
+        }
+    }
+
+    private void bfsTraversal() {
+        clearConsole();
+        printHeader("BFS TRAVERSAL");
+        System.out.print("Start location ID: ");
+        String start = scanner.nextLine().trim().toUpperCase();
+        if (!cityGraph.hasLocation(start)) {
+            System.out.println("Not found.");
+        } else {
+            graphTraversal.bfsTraversal(start);
+        }
+        pause();
+    }
+
+    private void dfsTraversal() {
+        clearConsole();
+        printHeader("DFS TRAVERSAL");
+        System.out.print("Start location ID: ");
+        String start = scanner.nextLine().trim().toUpperCase();
+        if (!cityGraph.hasLocation(start)) {
+            System.out.println("Not found.");
+        } else {
+            graphTraversal.dfsTraversal(start);
+        }
+        pause();
+    }
+
+    private void checkConnectivity() {
+        clearConsole();
+        printHeader("CONNECTIVITY");
+        // Simple connectivity check using BFS from first location
+        List<Location> all = cityGraph.getAllLocations();
+        if (all.isEmpty()) {
+            System.out.println("Graph empty.");
+        } else {
+            List<Location> visited = graphTraversal.bfsTraversal(all.get(0).getId());
+            if (visited.size() == all.size()) {
+                System.out.println("Graph is fully connected.");
+            } else {
+                System.out.println("Graph has " + (all.size() - visited.size()) + " unreachable locations.");
+            }
+        }
+        pause();
+    }
+
+    private void generateRandomGraph() {
+        clearConsole();
+        printHeader("GENERATE RANDOM GRAPH");
+        System.out.print("Number of locations (3-20): ");
+        int n = validator.getIntInput(scanner, "", 3, 20);
+        System.out.print("Connection probability (10-90%): ");
+        int prob = validator.getIntInput(scanner, "", 10, 90);
+
+        // Clear existing
+        locationTree.clear();
+        cityGraph = new CityGraph();
+        graphTraversal = new GraphTraversal(cityGraph);
+
+        Random rand = new Random();
+        String[] types = {"Park","Hospital","School","Mall","Residential"};
+        for (int i = 1; i <= n; i++) {
+            String id = String.format("L%03d", i);
+            String name = "Loc" + i;
+            String type = types[rand.nextInt(types.length)];
+            double x = rand.nextDouble() * 100;
+            double y = rand.nextDouble() * 100;
+            Location loc = new Location(id, name, type, x, y);
+            locationTree.insert(loc);
+            cityGraph.addLocation(loc);
+        }
+        List<Location> locs = cityGraph.getAllLocations();
+        for (int i = 0; i < locs.size(); i++) {
+            for (int j = i+1; j < locs.size(); j++) {
+                if (rand.nextInt(100) < prob) {
+                    String rid = "R" + locs.get(i).getId().substring(1) + locs.get(j).getId().substring(1);
+                    int dist = 100 + rand.nextInt(900);
+                    String rtype = rand.nextBoolean() ? "Street" : "Avenue";
+                    int traffic = 1 + rand.nextInt(5);
+                    cityGraph.addRoad(rid, locs.get(i).getId(), locs.get(j).getId(), dist, rtype, traffic);
+                }
+            }
+        }
+        System.out.println("Random graph generated.");
+        pause();
+    }
+
+
+
+    
 }
 
