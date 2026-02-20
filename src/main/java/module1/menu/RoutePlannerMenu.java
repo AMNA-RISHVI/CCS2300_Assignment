@@ -117,6 +117,7 @@ public class RoutePlannerMenu {
     }
 
 
+
     private void locationManagementMenu() {
         while (true) {
             clearConsole();
@@ -298,6 +299,150 @@ public class RoutePlannerMenu {
             }
         }
         System.out.println("Sync complete.");
+        pause();
+    }
+
+
+
+
+    private void roadManagementMenu() {
+        while (true) {
+            clearConsole();
+            printHeader("ROAD MANAGEMENT");
+            System.out.println("1. Add Road");
+            System.out.println("2. Remove Road");
+            System.out.println("3. Update Traffic");
+            System.out.println("4. List All Roads");
+            System.out.println("5. View Location Connections");
+            System.out.println("6. Back");
+            System.out.print("\nChoice (1-6): ");
+
+            String choice = scanner.nextLine().trim();
+            switch (choice) {
+                case "1": addRoad(); break;
+                case "2": removeRoad(); break;
+                case "3": updateTraffic(); break;
+                case "4": listAllRoads(); break;
+                case "5": viewLocationConnections(); break;
+                case "6": return;
+                default: System.out.println("Invalid choice."); pause();
+            }
+        }
+    }
+
+    private void addRoad() {
+        clearConsole();
+        printHeader("ADD ROAD");
+        System.out.print("Road ID (e.g., R001): ");
+        String roadId = scanner.nextLine().trim().toUpperCase();
+        if (!validator.isValidRoadId(roadId)) {
+            System.out.println("Invalid format.");
+            pause(); return;
+        }
+        System.out.print("From Location ID: ");
+        String fromId = scanner.nextLine().trim().toUpperCase();
+        if (!cityGraph.hasLocation(fromId)) {
+            System.out.println("From location not found.");
+            pause(); return;
+        }
+        System.out.print("To Location ID: ");
+        String toId = scanner.nextLine().trim().toUpperCase();
+        if (!cityGraph.hasLocation(toId)) {
+            System.out.println("To location not found.");
+            pause(); return;
+        }
+        if (fromId.equals(toId)) {
+            System.out.println("Cannot connect to itself.");
+            pause(); return;
+        }
+        if (cityGraph.roadExists(fromId, toId)) {
+            System.out.println("Road already exists.");
+            pause(); return;
+        }
+        int distance = validator.getIntInput(scanner, "Distance (m): ", 1, 10000);
+        System.out.print("Road type (Street/Avenue/Highway/Alley): ");
+        String type = scanner.nextLine().trim();
+        int traffic = validator.getIntInput(scanner, "Traffic (1-5): ", 1, 5);
+
+        if (cityGraph.addRoad(roadId, fromId, toId, distance, type, traffic)) {
+            System.out.println("Road added.");
+        }
+        pause();
+    }
+
+    private void removeRoad() {
+        clearConsole();
+        printHeader("REMOVE ROAD");
+        System.out.print("From Location ID: ");
+        String fromId = scanner.nextLine().trim().toUpperCase();
+        System.out.print("To Location ID: ");
+        String toId = scanner.nextLine().trim().toUpperCase();
+        if (cityGraph.removeRoad(fromId, toId)) {
+            System.out.println("Road removed.");
+        } else {
+            System.out.println("Road not found.");
+        }
+        pause();
+    }
+
+    private void updateTraffic() {
+        clearConsole();
+        printHeader("UPDATE TRAFFIC");
+        System.out.print("From Location ID: ");
+        String fromId = scanner.nextLine().trim().toUpperCase();
+        System.out.print("To Location ID: ");
+        String toId = scanner.nextLine().trim().toUpperCase();
+        if (!cityGraph.roadExists(fromId, toId)) {
+            System.out.println("Road does not exist.");
+            pause(); return;
+        }
+        int newTraffic = validator.getIntInput(scanner, "New traffic (1-5): ", 1, 5);
+        // Simplified: remove and re-add with new traffic
+        Road old = null;
+        for (Road r : cityGraph.getConnectedRoads(fromId)) {
+            if (r.getDestination().getId().equals(toId)) old = r;
+        }
+        if (old != null) {
+            cityGraph.removeRoad(fromId, toId);
+            cityGraph.addRoad(old.getId().replace("_F",""), fromId, toId,
+                old.getDistance(), old.getRoadType(), newTraffic);
+            System.out.println("Traffic updated.");
+        }
+        pause();
+    }
+
+    private void listAllRoads() {
+        clearConsole();
+        printHeader("ALL ROADS");
+        List<Road> roads = cityGraph.getAllRoads();
+        if (roads.isEmpty()) {
+            System.out.println("No roads.");
+        } else {
+            Set<String> shown = new HashSet<>();
+            System.out.printf("%-6s %-20s %-20s %-8s %-10s %-6s%n", "ID", "From", "To", "Dist", "Type", "Traffic");
+            System.out.println("-".repeat(80));
+            for (Road r : roads) {
+                if (r.getId().endsWith("_F") && !shown.contains(r.getId())) {
+                    System.out.printf("%-6s %-20s %-20s %-8d %-10s %-6d%n",
+                        r.getId().replace("_F",""),
+                        r.getSource().getName(),
+                        r.getDestination().getName(),
+                        r.getDistance(),
+                        r.getRoadType(),
+                        r.getTrafficLevel());
+                    shown.add(r.getId());
+                }
+            }
+        }
+        pause();
+    }
+
+    private void viewLocationConnections() {
+        clearConsole();
+        printHeader("LOCATION CONNECTIONS");
+        System.out.print("Location ID: ");
+        String id = scanner.nextLine().trim().toUpperCase();
+        cityGraph.displayLocationDetails(id);
         pause();
     }
 }
