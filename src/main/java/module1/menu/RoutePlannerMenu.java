@@ -560,6 +560,70 @@ public class RoutePlannerMenu {
 
 
 
-    
+    private void treeOperationsMenu() {
+        while (true) {
+            clearConsole();
+            printHeader("TREE OPERATIONS");
+            System.out.println("1. Display Tree Structure");
+            System.out.println("2. In-Order Traversal");
+            System.out.println("3. Tree Statistics");
+            System.out.println("4. Check Balance");
+            System.out.println("5. Back");
+            System.out.print("\nChoice: ");
+
+            String choice = scanner.nextLine().trim();
+            switch (choice) {
+                case "1": displayTreeStructure(); break;
+                case "2": locationTree.displayInOrder(); pause(); break;
+                case "3": displayTreeStats(); break;
+                case "4": checkTreeBalance(); break;
+                case "5": return;
+                default: System.out.println("Invalid."); pause();
+            }
+        }
+    }
+
+    private void displayTreeStructure() {
+        clearConsole();
+        printHeader("TREE STRUCTURE");
+        if (locationTree.isEmpty()) {
+            System.out.println("Tree empty.");
+        } else {
+            System.out.println("Size: " + locationTree.getSize());
+            System.out.println("Height: " + locationTree.getHeight());
+            System.out.println("In-order traversal:");
+            locationTree.displayInOrder();
+        }
+        pause();
+    }
+
+    private void displayTreeStats() {
+        clearConsole();
+        printHeader("TREE STATISTICS");
+        if (locationTree.isEmpty()) {
+            System.out.println("Tree empty.");
+        } else {
+            int size = locationTree.getSize();
+            int height = locationTree.getHeight();
+            boolean balanced = locationTree.isBalanced();
+            System.out.println("Size: " + size);
+            System.out.println("Height: " + height);
+            System.out.println("Balanced: " + (balanced ? "Yes" : "No"));
+            System.out.printf("Ideal height: %.0f%n", Math.ceil(Math.log(size+1)/Math.log(2)));
+        }
+        pause();
+    }
+
+    private void checkTreeBalance() {
+        clearConsole();
+        printHeader("BALANCE CHECK");
+        if (locationTree.isEmpty()) {
+            System.out.println("Tree empty.");
+        } else {
+            boolean balanced = locationTree.isBalanced();
+            System.out.println(balanced ? "Tree is balanced." : "Tree is NOT balanced.");
+        }
+        pause();
+    }
 }
 
