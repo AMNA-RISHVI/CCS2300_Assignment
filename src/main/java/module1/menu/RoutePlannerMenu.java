@@ -714,5 +714,66 @@ public class RoutePlannerMenu {
     }
 
 
+
+
+    private void demoDataMenu() {
+        while (true) {
+            clearConsole();
+            printHeader("DEMO DATA");
+            System.out.println("Demo data loaded: " + (demoDataLoaded ? "Yes" : "No"));
+            System.out.println("1. Load Standard Demo");
+            System.out.println("2. Clear All Data");
+            System.out.println("3. Back");
+            System.out.print("\nChoice (1-3): ");
+
+            String choice = scanner.nextLine().trim();
+            switch (choice) {
+                case "1":
+                    loadDemoData();
+                    break;
+                case "2":
+                    clearAllData();
+                    break;
+                case "3":
+                    return;
+                default:
+                    System.out.println("Invalid choice.");
+                    pause();
+            }
+        }
+    }
+
+    private void loadDemoData() {
+        clearConsole();
+        printHeader("LOAD DEMO DATA");
+        System.out.print("This will replace all current data. Continue? (y/n): ");
+        if (!scanner.nextLine().trim().equalsIgnoreCase("y")) {
+            System.out.println("Cancelled.");
+            pause();
+            return;
+        }
+        initializeSampleData();
+        demoDataLoaded = true;
+        System.out.println("Demo data loaded.");
+        pause();
+    }
+
+    private void clearAllData() {
+        clearConsole();
+        printHeader("CLEAR ALL DATA");
+        System.out.print("Are you sure? (y/n): ");
+        if (!scanner.nextLine().trim().equalsIgnoreCase("y")) {
+            System.out.println("Cancelled.");
+            pause();
+            return;
+        }
+        locationTree.clear();
+        cityGraph = new CityGraph();
+        graphTraversal = new GraphTraversal(cityGraph);
+        demoDataLoaded = false;
+        System.out.println("All data cleared.");
+        pause();
+    }
 }
+
 
