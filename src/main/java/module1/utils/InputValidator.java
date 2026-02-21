@@ -1,6 +1,7 @@
 package module1.utils;
 
 import java.util.Scanner;
+import java.util.Set;
 
 public class InputValidator {
 
@@ -76,6 +77,43 @@ public class InputValidator {
             );
         }
     }
+
+
+    // Add constants for allowed road types
+    private static final Set<String> ALLOWED_ROAD_TYPES = Set.of("Street", "Avenue", "Highway", "Alley");
+    
+    
+    //Validates a location ID format and throws exception if invalid
+    public void validateLocationIdFormat(String id) throws InvalidLocationIdException {
+        if (!isValidLocationId(id)) {
+            throw new InvalidLocationIdException(
+                "Invalid location ID format. Must start with 'L' followed by at least 3 digits (e.g., L001)"
+            );
+        }
+    }
+
+    //Validates a road ID format and throws exception if invalid
+    public void validateRoadIdFormat(String id) throws InvalidRoadIdException {
+        if (!isValidRoadId(id)) {
+            throw new InvalidRoadIdException(
+                "Invalid road ID format. Must start with 'R' followed by at least 3 digits (e.g., R001)"
+            );
+        }
+    }
+
+    //Checks if a road type is allowed
+    public boolean isValidRoadType(String type) {
+        return type != null && ALLOWED_ROAD_TYPES.contains(type);
+    }
+
+    //Validates a road type
+    public void validateRoadType(String type) throws InvalidInputException {
+        if (!isValidRoadType(type)) {
+            throw new InvalidInputException("Road type must be one of: Street, Avenue, Highway, Alley");
+        }
+    }
+
+    
 }
     
     
