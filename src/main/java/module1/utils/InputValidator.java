@@ -2,6 +2,8 @@ package module1.utils;
 
 import java.util.Scanner;
 import java.util.Set;
+import java.util.Collection;
+
 
 public class InputValidator {
 
@@ -113,7 +115,33 @@ public class InputValidator {
         }
     }
 
-    
+
+    //Checks if a location ID already exists
+    public boolean isDuplicateLocationId(String id, Collection<String> existingIds) {
+        return existingIds != null && existingIds.contains(id);
+    }
+
+    //Throws DuplicateLocationException if ID already exists
+    public void checkDuplicateLocationId(String id, Collection<String> existingIds) throws DuplicateLocationException {
+        if (isDuplicateLocationId(id, existingIds)) {
+            throw new DuplicateLocationException("Location ID '" + id + "' already exists.");
+        }
+    }
+
+    //Checks if a road ID already exists (considering bidirectional suffixes)
+    public boolean isDuplicateRoadId(String id, Collection<String> existingRoadIds) {
+        if (existingRoadIds == null) return false;
+        return existingRoadIds.contains(id) ||
+           existingRoadIds.contains(id + "_F") ||
+           existingRoadIds.contains(id + "_R");
+    }
+
+    public void checkDuplicateRoadId(String id, Collection<String> existingRoadIds) throws DuplicateRoadException {
+        if (isDuplicateRoadId(id, existingRoadIds)) {
+            throw new DuplicateRoadException("Road ID '" + id + "' (or its bidirectional counterpart) already exists.");
+        }
+    }
+
 }
     
     
