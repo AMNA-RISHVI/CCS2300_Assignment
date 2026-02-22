@@ -22,19 +22,25 @@ public class AlgorithmAnalyzer{
             nums[i]= i;
         }
 
-        
+        //measure sorting execution time
+        long sortingstarttime =System.nanoTime();
+        SortingAlgorithm.mergesort(nums, 0, nums.length - 1);
+        long sortingendtime = System.nanoTime();
+
         // measure execution time
-        long starttime = System.nanoTime();
+        long searchingstarttime = System.nanoTime();
 
-        int results = SearchingAlgorithm.binarySearch(nums, target);
+        int searchingresults = SearchingAlgorithm.binarySearch(nums, target);
 
-        long endtime = System.nanoTime();
-        long  executetime = endtime-starttime ;
+        long searchingendtime = System.nanoTime();
+        long  searchingexecutetime = searchingendtime-searchingstarttime ;
+
+        
 
         //display results
-        if (results!=-1 ){
-             System.out.println("index :"+results  );
-             System.out .println("Executing time of binarysearch :"+executetime +" ns");
+        if (searchingresults!=-1 ){
+             System.out.println("index :"+searchingresults  );
+             System.out .println("Executing time of binarysearch :"+searchingexecutetime +" ns");
 
         }
         else{
