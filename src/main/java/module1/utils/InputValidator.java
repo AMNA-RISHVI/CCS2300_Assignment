@@ -19,7 +19,9 @@ public class InputValidator {
     }
 
     public boolean isValidName(String name) {
-        return name != null && name.length() >= 2 && name.length() <= 50;
+        if (name == null) return false;
+        String trimmed = name.trim();
+        return trimmed.length() >= 2 && trimmed.length() <= 50;
     }
 
     public int getIntInput(Scanner scanner, String prompt, int min, int max) {
