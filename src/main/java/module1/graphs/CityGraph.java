@@ -310,7 +310,6 @@ public class CityGraph {
         // For now, we remove and recreate the road
         // In a real implementation, we would have mutable traffic levels
     
-        System.out.println("Traffic update not implemented in this version");
         return false;
     }
     
@@ -489,7 +488,7 @@ public class CityGraph {
             case 3: return "orange - heavy";
             case 4: return "red - very heavy";
             case 5: return "stop - gridlock";
-            default: return "Invalide";
+            default: return "Invalid";
         }
     }
 

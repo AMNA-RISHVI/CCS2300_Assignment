@@ -63,22 +63,6 @@ public class Location {
         if (type == null || type.trim().isEmpty()) {
             throw new IllegalArgumentException("Location type cannot be null or empty");
         }
-        
-        // Validate against allowed types
-        String[] allowedTypes = {"Park", "Hospital", "School", "Mall", "Restaurant", 
-                                 "Residential", "Commercial", "Industrial", "Transport"};
-        boolean validType = false;
-        for (String allowed : allowedTypes) {
-            if (allowed.equalsIgnoreCase(type)) {
-                validType = true;
-                break;
-            }
-        }
-        
-        if (!validType) {
-            System.out.println("Warning: Location type '" + type + "' is not in recommended list");
-            // Not throwing exception, just warning for flexibility
-        }
     }
     
     // Getters and Setters

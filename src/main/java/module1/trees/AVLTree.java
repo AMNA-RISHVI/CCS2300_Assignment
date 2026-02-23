@@ -50,24 +50,6 @@ public class AVLTree implements LocationTree {
         }
     }
 
-    private boolean verifyHeight(AVLNode node) {
-        if (node == null) return true;
-
-        int expectedHeight = 1 + Math.max(height(node.left), height(node.right));
-        boolean correct = (node.height == expectedHeight);
-
-        if (!correct) {
-            System.err.println(
-                "Height mismatch at node " + node.location.getId() + ": expected " + expectedHeight + ", got " + node.height );
-        }
-    
-        return correct && verifyHeight(node.left) && verifyHeight(node.right);
-    }
-
-    public boolean verifyTree() {
-        return verifyHeight(root);
-    }
-
     
     private int getBalance(AVLNode node) {
         if (node == null) {
@@ -108,7 +90,6 @@ public class AVLTree implements LocationTree {
         
         root = insert(root, location);
         size++;
-        System.out.println("Inserted location: " + location.getName() + " (Tree height: " + getHeight() + ")");
     }
     
     
@@ -191,7 +172,6 @@ public class AVLTree implements LocationTree {
         
         root = delete(root, locationId);
         size--;
-        System.out.println("Deleted location: " + location.getName() + " (Tree height: " + getHeight() + ")");
     }
     
     private AVLNode delete(AVLNode node, String locationId) {
