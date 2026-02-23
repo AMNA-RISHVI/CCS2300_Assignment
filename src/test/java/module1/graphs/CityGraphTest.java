@@ -1,7 +1,7 @@
 package module1.graphs;
 
 import module1.models.Location;
-import module1.models.Road;
+
 import java.util.List;
 
 public class CityGraphTest {
