@@ -1,3 +1,4 @@
+package analysis;
 public class SortingAlgorithm{
     public static void mergesort(int []nums ,int l,int r ){
         if(l<r){

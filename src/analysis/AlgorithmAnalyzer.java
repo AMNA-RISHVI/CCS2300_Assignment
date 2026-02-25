@@ -1,3 +1,4 @@
+package moduleN3.analysis;
 
 import java.util.Random;
 import java.util.Scanner;
