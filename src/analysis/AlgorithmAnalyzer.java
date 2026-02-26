@@ -1,4 +1,4 @@
-package moduleN3.analysis;
+package analysis;
 
 import java.util.Random;
 import java.util.Scanner;
@@ -7,14 +7,14 @@ public class AlgorithmAnalyzer{
 
     //Binary search algorithms 
     public static void main(String[] args) {
-        
-        
- 
-    // Entering input size    
+
+        // Entering input size    
         Scanner scn = new Scanner (System.in);
         System.out.println("Enter input size: ");
         int n = scn.nextInt();
 
+
+ 
     
         Random rand = new Random();
         int nums[] = new int [n];
@@ -35,7 +35,7 @@ public class AlgorithmAnalyzer{
 
         //measure sorting execution time
         long sortingstarttime =System.nanoTime();
-        SortingAlgorithm.mergesort(nums, 0, nums.length - 1);
+        SortingAlgorithm.mergesort(nums,0,nums.length - 1);
         long sortingendtime = System.nanoTime();
         long sortingexecutiontime = sortingendtime -sortingstarttime;
         
@@ -49,13 +49,36 @@ public class AlgorithmAnalyzer{
         long searchingendtime = System.nanoTime();
         long  searchingexecutetime = searchingendtime-searchingstarttime ;
     
+     //table header create
+         System.out.println("\n=======================================================================");
+         System.out.println(                        "Execution Time Comparision");
+         System.out.println("=========================================================================");
+         System.out.printf( "%-15s %-12s %-15s\n",
+                           "Inputsize",
+                              " Mergesorting(ns)",
+                              " binarysearching(ns)"
+       );
+
+         System.out.println("------------------------------------------------------------------------");
 
         
 
-        //display results
+        //display results on table 
+       
+
+        System.out.printf("%-15d %,12d %,15d%n",
+                            n,
+                            sortingexecutiontime,
+                            searchingexecutetime);
+                        
+         System.out.println("------------------------------------------------------------------------");
+
+
+
+
         if (searchingresults!=-1 ){
              System.out.println("index :"+searchingresults  );
-             System.out .println("Executing time of binarysearch :"+searchingexecutetime +" ns");
+            
 
         }
         else{
