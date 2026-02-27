@@ -6,16 +6,13 @@ import java.util.Scanner;
 public class AlgorithmAnalyzer{
 
     //Binary search algorithms 
-    public static void main(String[] args) {
-
-        // Entering input size    
-        Scanner scn = new Scanner (System.in);
-        System.out.println("Enter input size: ");
-        int n = scn.nextInt();
-
-
- 
     
+
+
+    // This method can be called from your menu
+    public static void runAnalyzer(int size , Scanner scn){
+
+         int n = size;
         Random rand = new Random();
         int nums[] = new int [n];
         
@@ -87,10 +84,22 @@ public class AlgorithmAnalyzer{
     
 
     
-        scn.close();
+    
+        
+    
         
 
-    }   
+    }
+    // optional main() for testing
+    public static void main(String[] args) {
+        // Entering input size    
+        Scanner sc = new Scanner (System.in);
+        System.out.println("Enter input size: ");
+        int size = sc.nextInt();
+        runAnalyzer(size,sc);
+
+        
+    }
 
 
    
