@@ -2,7 +2,7 @@ package menu;
 import analysis.AlgorithmAnalyzer;
 import java.util.Scanner;
 
-public class performaceAnalyzerMenu {
+public class PerformanceAnalyzerMenu{
     public  void showMenu(Scanner sc ){
         
         int choice;
