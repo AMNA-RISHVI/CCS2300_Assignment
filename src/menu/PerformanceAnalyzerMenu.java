@@ -2,12 +2,12 @@ package menu;
 import analysis.AlgorithmAnalyzer;
 import java.util.Scanner;
 
-public class performaceanalyzerMenu {
-    public static void main(String[] args) {
-        Scanner sc =new Scanner(System.in);
+public class performaceAnalyzerMenu {
+    public  void showMenu(Scanner sc ){
+        
         int choice;
         do {
-            System.out.println("=====================performance Analyzer Menu==================");
+            System.out.println("=====================Performance Analyzer Menu==================");
             System.out.println("1.Run Analyzer");
             System.out.println("2.Exit");
             System.out.print("Enter your choice:");
@@ -35,7 +35,7 @@ public class performaceanalyzerMenu {
             
         } while (choice !=2);
 
-        sc.close();
+        
 
     }
     
