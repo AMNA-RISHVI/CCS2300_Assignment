@@ -2,15 +2,15 @@ package analysis;
 
 import java.util.Random;
 import java.util.Scanner;
+import model.Testresult;
 
 public class AlgorithmAnalyzer{
 
-    //Binary search algorithms 
     
 
 
     // This method can be called from your menu
-    public static void runAnalyzer(int size , Scanner scn){
+    public static void  runAnalyzer(int size , Scanner scn){
 
          int n = size;
         Random rand = new Random();
@@ -28,6 +28,7 @@ public class AlgorithmAnalyzer{
         System.out.println("Enter number to search:");
         int target = scn.nextInt();
         
+        
     
 
         //measure sorting execution time
@@ -41,19 +42,20 @@ public class AlgorithmAnalyzer{
         // measure execution time
         long searchingstarttime = System.nanoTime();
 
-        int searchingresults = SearchingAlgorithm.binarySearch(nums, target);
+        int searchingindex =SearchingAlgorithm.binarySearch(nums, target);
 
         long searchingendtime = System.nanoTime();
         long  searchingexecutetime = searchingendtime-searchingstarttime ;
     
      //table header create
          System.out.println("\n=======================================================================");
-         System.out.println(                        "Execution Time Comparision");
+         System.out.println("...................Execution time Table.................................");
          System.out.println("=========================================================================");
          System.out.printf( "%-15s %-12s %-15s\n",
                            "Inputsize",
                               " Mergesorting(ns)",
                               " binarysearching(ns)"
+                              
        );
 
          System.out.println("------------------------------------------------------------------------");
@@ -61,32 +63,30 @@ public class AlgorithmAnalyzer{
         
 
         //display results on table 
-       
-
-        System.out.printf("%-15d %,12d %,15d%n",
-                            n,
+        Testresult result = new Testresult(
+                            size,
                             sortingexecutiontime,
-                            searchingexecutetime);
+                            searchingexecutetime,
+                            searchingindex);
+    
+        System.out.printf("%-15d %,15d %,15d%n",
+                        result.getsize(),
+                        result.getsortingexecutiontime(),
+                       result.getsearchingexecutetime());
                         
          System.out.println("------------------------------------------------------------------------");
 
 
 
 
-        if (searchingresults!=-1 ){
-             System.out.println("index :"+searchingresults  );
+        if (searchingindex!=-1){
+             System.out.println("index :"+searchingindex);
             
 
         }
         else{
             System.out.println("value not found in array");
         }
-    
-
-    
-    
-        
-    
         
 
     }
@@ -100,6 +100,7 @@ public class AlgorithmAnalyzer{
 
         
     }
+
 
 
    
