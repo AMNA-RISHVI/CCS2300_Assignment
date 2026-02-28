@@ -12,6 +12,7 @@ public  class Testresult{
         this.searchingexecutetime=searchingexecutetime;
         this.sortingexecutiontime=sortingexecutiontime;
         this.searchingindex=searchingindex;
+        //// System.out.println("DEBUG: Testresult created!");
 
     }
     public int getsize(){
