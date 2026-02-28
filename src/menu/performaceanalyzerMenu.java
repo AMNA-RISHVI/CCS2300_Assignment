@@ -25,6 +25,7 @@ public class performaceanalyzerMenu {
                 case 2:
                     System.out.println("Exiting program");
                     break;
+    
                 default:
                     System.out.println("Invalide choice try again");
 
