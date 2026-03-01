@@ -99,7 +99,7 @@ javac -d bin src/main/java/**/*.java
 java -cp bin MainApp
 ```
 
-Follow the on‑screen menus to navigate between modules.
+### Follow the on‑screen menus to navigate between modules.
 ---
 
 ## 📁 Project Structure
