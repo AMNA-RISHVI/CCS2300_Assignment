@@ -42,8 +42,8 @@ public class SortingMenu {
                 case 4 -> runAllSorts();
                 case 5 -> showComparisonTable();
                 case 6 -> {
-                    exit = true;
                     System.out.println("Exiting program...");
+                    return;
                 }
                 default -> System.out.println("Invalid choice!");
             }
