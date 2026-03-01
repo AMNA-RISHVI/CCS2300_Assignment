@@ -98,8 +98,8 @@ javac -d bin src/main/java/**/*.java
 ```bash
 java -cp bin MainApp
 ```
+Follow the on‑screen menus to navigate between modules.
 
-### Follow the on‑screen menus to navigate between modules.
 ---
 
 ## 📁 Project Structure
