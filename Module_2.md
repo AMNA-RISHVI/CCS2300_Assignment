@@ -34,18 +34,26 @@ It demonstrates the implementation and comparison of multiple **sorting algorith
 
 
 src/main/java/
-│
-└── module_2/
-│
-├── SortingMenu.java
-│
-├── sorting/
-│ ├── BubbleSort.java
-│ ├── MergeSort.java
-│ └── QuickSort.java
-│
-└── util/
-└── PerformanceUtil.java
+
+   │
+   └── module_2/
+
+      │
+      ├── SortingMenu.java
+ 
+      │
+      ├── sorting/
+
+         │ ├── BubbleSort.java
+
+         │ ├── MergeSort.java
+
+         │ └── QuickSort.java
+
+      │
+      └── util/
+  
+           └── PerformanceUtil.java
 
 
 ---
